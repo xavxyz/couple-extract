@@ -1,0 +1,12 @@
+[
+  {
+    "lID": "xyz",
+    "from": "abc@xyz",
+    "timeStamp": 1,
+    "eventType": "text",
+    "text": "heyo",
+    "itemID": "123",
+    "cver": "1.2.3",
+    "pairingID": "idv4"
+  }
+]
