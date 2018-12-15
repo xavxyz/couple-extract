@@ -9,6 +9,7 @@
   "dependencies": {
     "dotenv": "^5.0.1",
     "fs-extra": "^5.0.0",
+    "image-downloader": "^3.4.2",
     "nodemon": "^1.17.2",
     "request": "^2.85.0",
     "request-promise": "^4.2.2"
