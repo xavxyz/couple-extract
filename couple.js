@@ -38,13 +38,12 @@ class Couple {
     }
 
     const { apiHost, authToken } = this.identify();
-
     return rp({
       uri: apiHost + '/timeline',
       method: 'GET',
       qs: {
         authenticationToken: authToken,
-        order: 'desc',
+        order,
         limit,
       },
       json: true,
