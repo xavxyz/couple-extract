@@ -12,46 +12,58 @@ const couple = new Couple();
 
 async function getData({ limit, order } = {}) {
   try {
-    console.log('⚡️ Authenticating');
-    await couple.authenticate(EMAIL, PASSWORD);
+    // console.log('⚡️ Authenticating');
+    // await couple.authenticate(EMAIL, PASSWORD);
 
-    const identity = couple.identify();
+    // const identity = couple.identify();
 
-    console.log('🚀  Fetching history');
+    // console.log('🚀  Fetching history');
 
-    const timeline = await couple.timeline({
-      limit,
-      order,
-    });
+    // const timeline = await couple.timeline({
+    //   limit,
+    //   order,
+    // });
 
-    console.log(`🍕  ${timeline.length} events fetched!`);
+    // console.log(`🍕  ${timeline.length} events fetched!`);
 
-    await fs.writeJson(`./history/history-${Date.now()}.json`, timeline, {
-      spaces: 2,
-    });
+    // await fs.writeJson(`./history/history-${Date.now()}.json`, timeline, {
+    //   spaces: 2,
+    // });
 
-    console.log('♥️  History saved in history.json!');
+    // console.log('♥️  History saved in history.json!');
+    console.log('♥️  Using local history: timeline_couple.json');
+
+    const alreadySavedImages = await fs.readdir('./images');
+    const alreadySavedImagesTimeStamp = alreadySavedImages.map(filename => filename.substr(0, filename.length-4));
+
+    const timeline = await fs.readJson('./history/timeline_couple.json');
+
+    console.log(`🍕 ${timeline.length} events in the timeline!`);
+    console.log(`🍕 ${alreadySavedImages.length-1} images already saved!`);
 
     //  download images
     const itemWithImages = timeline.filter(item => item.mediaType === 'image');
+    console.log(`🏞 ${itemWithImages.length} images on-line`);
 
-    console.log(`🏞 About to downloads ${itemWithImages.length} images`);
+    const itemsToDownload = itemWithImages.filter(item => !alreadySavedImagesTimeStamp.find(timeStamp => Number(timeStamp) === item.timeStamp))
 
-    for (const item of itemWithImages) {
+    console.log(`🏞 About to downloads ${itemsToDownload.length} images`);
+
+    for (const item of itemsToDownload) {
       const options = {
         url: item.file,
-        dest: `${process.cwd()}/images/${item.lID}.jpg`,
+        dest: `${process.cwd()}/images/${item.timeStamp}.jpg`,
       };
 
       try {
         const { filename } = await downloader.image(options);
 
-        console.log(`👌 Image linked to message ${item.lID} saved!`);
+        console.log(`👌 Image linked to message ${item.timeStamp} saved!`);
       } catch (e) {
         console.log(
           `💩 Couldn't save image linked to message ${
-            item.lID
-          }, file url: ${url}`
+            item.timeStamp
+          }, file url: ${options.url}`
         );
       }
     }
